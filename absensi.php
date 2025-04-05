@@ -10,8 +10,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $keterangan = ($now >= 6 && $now <= 18) ? "Karyawan Masuk (Tepat Waktu)" : "Karyawan Telat";
 
     $query = "INSERT INTO absensi (nama, jabatan, keterangan) VALUES ('$nama', '$jabatan', '$keterangan')";
-    mysqli_query($conn, $query);
-    header("Location: list_absen.php");
+    mysqli_query($config, $query);
+    header("Location: data_absen.php");
     exit();
 }
 ?>
@@ -23,7 +23,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <title>Form Absensi</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body class="bg-light">
+<style>
+    .content {
+            margin-left: 250px;
+            padding: 30px;
+        }
+</style>
+<body class="bg-light ">
+  <div class="content">
 <div class="container mt-4">
   <h2 class="mb-4">Form Absensi Karyawan</h2>
   <div class="card shadow-sm">
@@ -38,10 +45,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <input type="text" class="form-control" id="jabatan" name="jabatan" required>
         </div>
         <button type="submit" class="btn btn-primary">Absen Sekarang</button>
-        <a href="list_absen.php" class="btn btn-secondary">Lihat Absensi</a>
+        <a href="data_absen.php" class="btn btn-secondary">Lihat Absensi</a>
       </form>
     </div>
   </div>
+</div>
 </div>
 </body>
 </html>
