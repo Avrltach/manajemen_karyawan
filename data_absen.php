@@ -1,7 +1,10 @@
 <?php
 require 'sidebar.php';
 include_once("config.php");
-$result = mysqli_query($config, "SELECT * FROM absensi ORDER BY waktu DESC");
+$result = mysqli_query($config, "SELECT a.id, k.nama, k.jabatan, a.waktu, a.keterangan
+FROM absensi a
+JOIN karyawan k ON a.id = k.id
+ORDER BY a.waktu DESC;");
 ?>
 
 <!DOCTYPE html>

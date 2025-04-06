@@ -1,47 +1,66 @@
 <?php
-require 'sidebar.php';
 include_once("config.php");
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nama = $_POST['nama'];
-    $jabatan = $_POST['jabatan'];
-    $now = date("H");
-
-    $keterangan = ($now >= 6 && $now <= 18) ? "Karyawan Masuk (Tepat Waktu)" : "Karyawan Telat";
-
-    $query = "INSERT INTO absensi (nama, jabatan, keterangan) VALUES ('$nama', '$jabatan', '$keterangan')";
-    mysqli_query($conn, $query);
-    header("Location: list_absen.php");
-    exit();
-}
+$result = mysqli_query($config, "SELECT * FROM karyawan ORDER BY id DESC");
 ?>
 
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
-  <meta charset="UTF-8">
-  <title>Form Absensi</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Karyawan</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .content {
+            margin-left: 250px;
+            padding: 30px;
+        }
+
+        .table th, .table td {
+            vertical-align: middle;
+        }
+    </style>
 </head>
-<body class="bg-light">
-<div class="container mt-4">
-  <h2 class="mb-4">Form Absensi Karyawan</h2>
-  <div class="card shadow-sm">
-    <div class="card-body">
-      <form method="POST">
-        <div class="mb-3">
-          <label for="nama" class="form-label">Nama</label>
-          <input type="text" class="form-control" id="nama" name="nama" required>
+
+<body>
+    <?php require 'sidebar.php'; ?>
+
+    <div class="content">
+        <div class="container">
+            <h2 class="text-center mb-4">Daftar Karyawan</h2>
+
+            <table class="table table-bordered">
+                <thead class="text-center">
+                    <tr>
+                        <th>Nama</th>
+                        <th>Jabatan</th>
+                        <th>Email</th>
+                        <th>Gaji</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php while ($data = mysqli_fetch_array($result)) { ?>
+                        <tr>
+                            <td><?= htmlspecialchars($data['nama']); ?></td>
+                            <td><?= htmlspecialchars($data['jabatan']); ?></td>
+                            <td><?= htmlspecialchars($data['email']); ?></td>
+                            <td>Rp <?= number_format($data['gaji'], 0, ',', '.'); ?></td>
+                            <td class="text-center">
+                                <a href="edit_karyawan.php?id=<?= $data['id']; ?>" class="btn btn-warning btn-sm">Edit</a>
+                                <a href="delete_karyawan.php?id=<?= $data['id']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus data ini?')">Hapus</a>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
         </div>
-        <div class="mb-3">
-          <label for="jabatan" class="form-label">Jabatan</label>
-          <input type="text" class="form-control" id="jabatan" name="jabatan" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Absen Sekarang</button>
-        <a href="list_absen.php" class="btn btn-secondary">Lihat Absensi</a>
-      </form>
     </div>
-  </div>
-</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
